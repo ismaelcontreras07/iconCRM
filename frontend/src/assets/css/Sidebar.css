@@ -145,3 +145,8 @@
 .wrapper.collapse .sidebar ul li a span.title{
   display: none;
 }
+
+.logout {
+  display: flex;
+  justify-content: center;
+} 

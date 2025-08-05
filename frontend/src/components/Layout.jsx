@@ -8,8 +8,8 @@ export default function Layout() {
     <div className="wrapper">
       <Sidebar />
 
-      <div className="main_container">
-        {/* Aquí se renderizan Dashboard, Leads, etc. */}
+      <div>
+        {/* Aquí se renderizan las páginas. */}
         <Outlet />
       </div>
     </div>

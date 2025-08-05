@@ -34,3 +34,87 @@ main {
   padding-left: 60px;
 } 
 
+.header-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.page-title {
+  text-align: center;
+  margin: 0;
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: var(--IconColor);
+  background-color: var(--WhiteColor);
+  padding: 1rem;
+  border-radius: 14px;
+}
+
+.btn-login {
+  width: 25%;
+  max-width: 150px;
+  min-width: 100px;
+  padding: 12px 16px;
+  margin-top: 2rem;
+  border-radius: 14px;
+  color: var(--WhiteColor);
+  font-family: inherit;
+  background-color: var(--IconColor);
+  border: none;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-login:hover {
+  cursor: pointer;
+  background-color: var(--IconDark);
+  transition: all 0.2s ease;
+}
+
+.wrapper.collapse .btn-logout {
+  padding: 12px 16px;
+  margin-top: 2rem;
+  border-radius: 14px;
+  color: var(--WhiteColor);
+  font-family: inherit;
+  background-color: var(--IconRed);
+  border: none;
+  width: 75%;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-logout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 85%;
+  padding: 12px 16px;
+  margin-top: 2rem;
+  border-radius: 14px;
+  color: var(--WhiteColor);
+  font-family: inherit;
+  background-color: var(--IconRed);
+  border: none;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-logout::before {
+  content: "Salir";
+  font-size: 1rem;
+}
+
+.wrapper.collapse .btn-logout::before {
+  content: "";
+  display: none;
+}
+
+
+.btn-logout:hover, .wrapper.collapse .btn-logout:hover {
+  cursor: pointer;
+  background-color: var(--IconDark);
+  transition: all 0.2s ease;
+
+}
+

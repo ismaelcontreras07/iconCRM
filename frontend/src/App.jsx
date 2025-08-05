@@ -12,6 +12,10 @@ import Layout          from './components/Layout';
 import Login           from './pages/Login';
 import Dashboard       from './pages/Dashboard';
 import Leads           from './pages/Leads';
+import Contacts        from './pages/Contacts';
+import Facturacion     from './pages/Facturacion';
+import Activities     from './pages/Activities';
+import Accounts           from './pages/Accounts';
 import './index.css';
 
 // Mapa de rutas a título de la página
@@ -19,6 +23,10 @@ const routeTitles = {
   '/login':     'Login',
   '/dashboard': 'Dashboard',
   '/leads':     'Leads',
+  '/contacts':  'Contactos',
+  '/facturacion': 'Facturación',
+  '/activities': 'Actividades',
+  '/accounts': 'Cuentas',
 };
 
 function TitleHandler() {
@@ -65,6 +73,10 @@ export default function App() {
 
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="leads"     element={<Leads />} />
+          <Route path="contacts"     element={<Contacts />} />
+          <Route path="facturacion"     element={<Facturacion />} />
+          <Route path="activities"     element={<Activities />} />
+          <Route path="accounts"     element={<Accounts />} />
         </Route>
 
         {/* Catch-all: redirige según auth */}

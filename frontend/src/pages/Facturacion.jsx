@@ -1,23 +1,18 @@
-// src/pages/Leads.jsx
+// src/pages/Facturacion.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import TableLeads from '../components/TableLeads';
 
-export default function Leads() {
+export default function Facturacion() {
   const navigate = useNavigate();
 
   return (
     <main>
-      <div className="leads-page" style={{ padding: '1.5rem' }}>
+      <div className="facturacion-page" style={{ padding: '1.5rem' }}>
       <header>
         <div className="header-container">
-        <h1 className='page-title'>Leads</h1>
+        <h1 className='page-title'>Facturación</h1>
         </div>
       </header>
-
-      <TableLeads />
-
-
     </div>
     </main>
   );
