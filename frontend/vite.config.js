@@ -6,12 +6,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      // 1) Intercepta TODO lo que empiece por /api
       '/api': {
-        target: 'http://localhost',
+        // 2) Apunta directamente a tu API
+        target: 'http://localhost/iconCRM/backend/api',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) =>
-          path.replace(/^\/api/, '/iconCRM/backend/api')
+        // 3) Elimina el prefijo `/api` de la ruta
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }
