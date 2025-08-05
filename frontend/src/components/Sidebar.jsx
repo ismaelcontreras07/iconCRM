@@ -90,6 +90,12 @@ export default function Sidebar() {
                 <span className="title">Facturación</span>
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/catalog" className="sidebar-link">
+                <span className="icon"><i className="fas fa-list" /></span>
+                <span className="title">Catalogo</span>
+              </NavLink>
+            </li>
           </ul>
           <div className="logout">
             <LogoutButton />

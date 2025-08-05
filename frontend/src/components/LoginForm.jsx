@@ -68,7 +68,7 @@ export default function LoginForm() {
         />
       </div>
 
-      <button type="submit" disabled={loading} className="btn-login">
+      <button type="submit" disabled={loading} className="btn">
         {loading ? 'Validando…' : 'Entrar'}
       </button>
     </form>
