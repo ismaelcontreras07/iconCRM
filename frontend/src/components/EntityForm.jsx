@@ -35,7 +35,7 @@ const fieldConfigs = {
     { name: 'credit',      label: 'Crédito',             type: 'number' },
     { name: 'role',        label: 'Rol',                 type: 'select', options: [
         { value: 'cliente', label: 'Cliente' },
-        { value: 'proveedor', label: 'Proveedor' }
+        { value: 'provider', label: 'Proveedor' }
       ]
     }
   ],
@@ -78,6 +78,8 @@ export default function EntityForm({ entity, id = null, requiredFields = [], onC
   const isEdit   = Boolean(id);
   const endpoint = isEdit ? updateEndpoint[entity] : createEndpoint[entity];
 
+  const [accountOptions, setAccountOptions] = useState([]);
+
   // Estado general
   const [formData, setFormData] = useState({});
   const [razones,   setRazones] = useState(['']);           // solo para accounts
@@ -106,6 +108,16 @@ export default function EntityForm({ entity, id = null, requiredFields = [], onC
         .then(data => data.success && setRazones(data.razones.map(rs => rs.nombre)));
     }
   }, [entity, id, isEdit]);
+
+  // tras tu useEffect de inicialización de formData:
+useEffect(() => {
+  if (entity === 'contacts') {
+    fetch('/api/accounts/listAccounts.php', { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => d.success && setAccountOptions(d.accounts))
+      .catch(console.error);
+  }
+}, [entity]);
 
   // Manejadores
   const handleChange = e => {
@@ -145,69 +157,99 @@ export default function EntityForm({ entity, id = null, requiredFields = [], onC
   };
 
   return (
-    <form onSubmit={handleSubmit} className="entity-form">
-      {onCancel && (
-        <button type="button" onClick={onCancel} className="btn-close-form">X</button>
-      )}
+<form onSubmit={handleSubmit} className="entity-form">
+  {onCancel && (
+    <button type="button" onClick={onCancel} className="btn-close-form">X</button>
+  )}
 
-      {/* Campos genéricos */}
-      {fieldConfigs[entity]?.map(field => {
-        const required = field.required || requiredFields.includes(field.name);
-        return (
-          <div key={field.name} className="form-group">
-            <label htmlFor={field.name} className="form-label">{field.label}</label>
-            {field.type === 'select' ? (
-              <select
-                id={field.name}
-                name={field.name}
-                value={formData[field.name] || ''}
-                onChange={handleChange}
-                required={required}
-              >
-                <option value="">Selecciona…</option>
-                {field.options.map(o => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </select>
-            ) : (
-              <input
-                id={field.name}
-                name={field.name}
-                type={field.type}
-                value={formData[field.name] || ''}
-                onChange={handleChange}
-                required={required}
-              />
-            )}
-          </div>
-        );
-      })}
+  {/* Campos genéricos */}
+  {fieldConfigs[entity]?.map(field => {
+    const required = field.required || requiredFields.includes(field.name);
 
-      {/* Razones sociales (solo en accounts) */}
-      {entity === 'accounts' && (
-        <div className="form-group">
-          <label htmlFor="razones_sociales" className="form-label">Razones Sociales</label>
-          {razones.map((r, i) => (
-            <input
-              key={i}
-              type="text"
-              value={r}
-              onChange={e => {
-                const copy = [...razones]; copy[i] = e.target.value; setRazones(copy);
-              }}
-            />
-          ))}
-          
-          <button type="button" onClick={() => setRazones(prev => [...prev, ''])} className="btn-add">
-            +
-          </button>
+    // Si es contacts y es account_id, renderizamos el select
+    if (entity === 'contacts' && field.name === 'account_id') {
+      return (
+        <div key="account_id" className="form-group">
+          <label htmlFor="account_id" className="form-label">Cuenta</label>
+          <select
+            id="account_id"
+            name="account_id"
+            value={formData.account_id || ''}
+            onChange={handleChange}
+            required={required}
+          >
+            <option value="">Selecciona cuenta…</option>
+            {accountOptions.map(a => (
+              <option key={a.id} value={a.id}>
+                {a.name}
+              </option>
+            ))}
+          </select>
         </div>
-      )}
+      );
+    }
 
-      {error && <div className="error">{error}</div>}
-      <button type="submit" disabled={loading} className="btn">
-        {loading ? 'Guardando…' : 'Guardar'}
+    // Para el resto de campos, mantenemos la lógica anterior
+    return (
+      <div key={field.name} className="form-group">
+        <label htmlFor={field.name} className="form-label">{field.label}</label>
+        {field.type === 'select' ? (
+          <select
+            id={field.name}
+            name={field.name}
+            value={formData[field.name] || ''}
+            onChange={handleChange}
+            required={required}
+          >
+            <option value="">Selecciona…</option>
+            {field.options.map(o => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        ) : (
+          <input
+            id={field.name}
+            name={field.name}
+            type={field.type}
+            value={formData[field.name] || ''}
+            onChange={handleChange}
+            required={required}
+          />
+        )}
+      </div>
+    );
+  })}
+
+  {/* Razones sociales (solo en accounts) */}
+  {entity === 'accounts' && (
+    <div className="form-group">
+      <label htmlFor="razones_sociales" className="form-label">Razones Sociales</label>
+      {razones.map((r, i) => (
+        <input
+          key={i}
+          type="text"
+          value={r}
+          onChange={e => {
+            const copy = [...razones];
+            copy[i] = e.target.value;
+            setRazones(copy);
+          }}
+        />
+      ))}
+      <div className="add-btn-container">
+      <button type="button" onClick={() => setRazones(prev => [...prev, ''])} className="btn-add">
+        +
       </button>
-    </form>
+      <p>Agregar otra razón social</p>
+      </div>
+    </div>
+  )}
+
+  {error && <div className="error">{error}</div>}
+  <button type="submit" disabled={loading} className="btn">
+    {loading ? 'Guardando…' : 'Guardar'}
+  </button>
+</form>
+
   );
 }

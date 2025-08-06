@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EntityForm from '../components/EntityForm';
+import TableContacts from '../components/TableContacts';  
 
 export default function Contacts() {
   const navigate = useNavigate();
@@ -36,6 +37,10 @@ export default function Contacts() {
                   ]}
                 />
               ) : null}  
+
+              <div className="table-contacts">
+                <TableContacts />
+              </div>
     </div>
     </main>
   );

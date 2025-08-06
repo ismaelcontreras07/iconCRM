@@ -5,10 +5,14 @@ header('Content-Type: application/json; charset=utf-8');
 
 try {
   $stmt = $pdo->query("
-    SELECT c.*, a.name AS account_name
-    FROM contacts c
-    JOIN accounts a ON c.account_id = a.id
-    ORDER BY c.created_at DESC
+    SELECT 
+  c.*,
+  a.name AS account_name
+FROM contacts AS c
+LEFT JOIN accounts AS a
+  ON c.account_id = a.id
+ORDER BY c.created_at DESC;
+
   ");
   $contacts = $stmt->fetchAll();
   echo json_encode(['success' => true, 'contacts' => $contacts]);

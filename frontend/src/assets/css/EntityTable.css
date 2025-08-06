@@ -1,6 +1,7 @@
 
 .table-leads,
-.table-accounts {
+.table-accounts,
+.table-contacts {
     display: flex;
     justify-content: center;
     align-items: center;
