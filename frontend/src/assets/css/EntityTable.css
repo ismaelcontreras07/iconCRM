@@ -1,5 +1,6 @@
 
-.table-leads {
+.table-leads,
+.table-accounts {
     display: flex;
     justify-content: center;
     align-items: center;

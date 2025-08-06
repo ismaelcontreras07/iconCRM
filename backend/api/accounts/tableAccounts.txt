@@ -11,6 +11,8 @@ CREATE TABLE `accounts` (
   `country` VARCHAR(100)          DEFAULT NULL,
   `postal_code` VARCHAR(20)       DEFAULT NULL,
   `owner_id` INT UNSIGNED         DEFAULT NULL,             -- Relación a users.id (responsable/ejecutivo)
+  `credit` VARCHAR(50)           DEFAULT '0',             -- Crédito disponible
+  `role` ENUM('cliente', 'provider') NOT NULL DEFAULT "cliente",
   `status` ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
   `created_at` TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP          NOT NULL 

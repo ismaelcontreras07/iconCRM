@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EntityForm from '../components/EntityForm';
+import TableAccounts from '../components/TableAccounts';
 
 export default function Accounts() {
   const navigate = useNavigate();
@@ -35,6 +36,9 @@ export default function Accounts() {
                   ]}
                 />
               ) : null}  
+            <div className="table-accounts">
+              <TableAccounts />
+            </div>
     </div>
     </main>
   );

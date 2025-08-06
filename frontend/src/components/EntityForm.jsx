@@ -1,5 +1,5 @@
 // src/components/EntityForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/css/EntityForm.css';
 
@@ -31,7 +31,13 @@ const fieldConfigs = {
     { name: 'city',        label: 'Ciudad',              type: 'text' },
     { name: 'state',       label: 'Estado',              type: 'text' },
     { name: 'country',     label: 'País',                type: 'text' },
-    { name: 'postal_code', label: 'Código Postal',       type: 'text' }
+    { name: 'postal_code', label: 'Código Postal',       type: 'text' },
+    { name: 'credit',      label: 'Crédito',             type: 'number' },
+    { name: 'role',        label: 'Rol',                 type: 'select', options: [
+        { value: 'cliente', label: 'Cliente' },
+        { value: 'proveedor', label: 'Proveedor' }
+      ]
+    }
   ],
   contacts: [
     { name: 'account_id',  label: 'ID de Cuenta',        type: 'number', required: true },
@@ -46,64 +52,93 @@ const fieldConfigs = {
   ]
 };
 
-// Mapeo de archivos PHP por entidad
-const endpointMap = {
+// Endpoints de creación y actualización
+const createEndpoint = {
   leads:    'leads/createLeads.php',
   accounts: 'accounts/createAccounts.php',
   contacts: 'contacts/createContacts.php'
+};
+const updateEndpoint = {
+  leads:    'leads/updateLeads.php',
+  accounts: 'accounts/updateAccounts.php',
+  contacts: 'contacts/updateContacts.php'
 };
 
 /**
  * EntityForm component
  * @param {{
  *   entity: 'leads'|'accounts'|'contacts',
+ *   id?: number|null,
  *   requiredFields?: string[],
  *   onCancel?: () => void
  * }} props
  */
-export default function EntityForm({ entity, requiredFields = [], onCancel }) {
-  const config   = fieldConfigs[entity] || [];
-  const endpoint = endpointMap[entity];
+export default function EntityForm({ entity, id = null, requiredFields = [], onCancel }) {
   const navigate = useNavigate();
+  const isEdit   = Boolean(id);
+  const endpoint = isEdit ? updateEndpoint[entity] : createEndpoint[entity];
 
-  // Inicializar estado con todas las claves definidas
-  const [formData, setFormData] = useState(
-    config.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {})
-  );
-  const [error, setError]     = useState('');
-  const [loading, setLoading] = useState(false);
+  // Estado general
+  const [formData, setFormData] = useState({});
+  const [razones,   setRazones] = useState(['']);           // solo para accounts
+  const [loading,   setLoading] = useState(false);
+  const [error,     setError]   = useState('');
 
-  const handleChange = (e) => {
+  // 1) Inicializar formData vacío al cambiar de entidad
+  useEffect(() => {
+    const initial = (fieldConfigs[entity] || []).reduce(
+      (acc, f) => ({ ...acc, [f.name]: '' }), {}
+    );
+    setFormData(initial);
+    if (entity === 'accounts') setRazones(['']);
+  }, [entity]);
+
+  // 2) Si es edición, cargar datos de account y razones sociales
+  useEffect(() => {
+    if (entity === 'accounts' && isEdit) {
+      // Cuenta
+      fetch(`/api/accounts/getAccount.php?id=${id}`, { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => data.success && setFormData(data.account));
+      // Razones
+      fetch(`/api/razones_sociales/listRazonSociales.php?account_id=${id}`, { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => data.success && setRazones(data.razones.map(rs => rs.nombre)));
+    }
+  }, [entity, id, isEdit]);
+
+  // Manejadores
+  const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    if (!endpoint) {
-      setError('Entidad no soportada');
-      return;
-    }
     setLoading(true);
     setError('');
+
+    // Prepara payload
+    const payload = { ...formData };
+    if (isEdit) payload.id = id;
+    if (entity === 'accounts') payload.razones_sociales = JSON.stringify(razones);
 
     try {
       const res = await fetch(`/api/${endpoint}`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData)
+        body: new URLSearchParams(payload)
       });
       const data = await res.json();
-
       if (res.ok && data.success) {
         navigate(`/${entity}`, { replace: true });
       } else {
-        setError(data.message || 'Error al crear registro');
+        setError(data.message || 'Error al guardar');
       }
     } catch (err) {
-      console.error('Error en submit:', err);
-      setError('Error de conexión al servidor');
+      console.error(err);
+      setError('Error de conexión');
     } finally {
       setLoading(false);
     }
@@ -111,36 +146,27 @@ export default function EntityForm({ entity, requiredFields = [], onCancel }) {
 
   return (
     <form onSubmit={handleSubmit} className="entity-form">
-      {/* Botón de cierre dentro del formulario */}
       {onCancel && (
-        <button
-          type="button"
-          onClick={onCancel}
-          className="btn-close-form"
-        >
-          X
-        </button>
+        <button type="button" onClick={onCancel} className="btn-close-form">X</button>
       )}
 
-      {config.map(field => {
-        const isRequired = field.required || requiredFields.includes(field.name);
+      {/* Campos genéricos */}
+      {fieldConfigs[entity]?.map(field => {
+        const required = field.required || requiredFields.includes(field.name);
         return (
-          <div className="form-group" key={field.name}>
+          <div key={field.name} className="form-group">
             <label htmlFor={field.name} className="form-label">{field.label}</label>
-
             {field.type === 'select' ? (
               <select
                 id={field.name}
                 name={field.name}
-                value={formData[field.name]}
+                value={formData[field.name] || ''}
                 onChange={handleChange}
-                required={isRequired}
+                required={required}
               >
-                <option value="">Selecciona...</option>
-                {field.options.map(opt => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
+                <option value="">Selecciona…</option>
+                {field.options.map(o => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
               </select>
             ) : (
@@ -148,14 +174,35 @@ export default function EntityForm({ entity, requiredFields = [], onCancel }) {
                 id={field.name}
                 name={field.name}
                 type={field.type}
-                value={formData[field.name]}
+                value={formData[field.name] || ''}
                 onChange={handleChange}
-                required={isRequired}
+                required={required}
               />
             )}
           </div>
         );
       })}
+
+      {/* Razones sociales (solo en accounts) */}
+      {entity === 'accounts' && (
+        <div className="form-group">
+          <label htmlFor="razones_sociales" className="form-label">Razones Sociales</label>
+          {razones.map((r, i) => (
+            <input
+              key={i}
+              type="text"
+              value={r}
+              onChange={e => {
+                const copy = [...razones]; copy[i] = e.target.value; setRazones(copy);
+              }}
+            />
+          ))}
+          
+          <button type="button" onClick={() => setRazones(prev => [...prev, ''])} className="btn-add">
+            +
+          </button>
+        </div>
+      )}
 
       {error && <div className="error">{error}</div>}
       <button type="submit" disabled={loading} className="btn">
