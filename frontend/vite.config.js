@@ -4,6 +4,21 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    include: ['react-trello']
+  },
+  resolve: {
+    alias: {
+      // redirige import "process" al paquete npm process/browser
+      process: 'process/browser',
+      // opcionalmente define un alias para react-trello si quieres forzar la versión
+      // 'react-trello': path.resolve(__dirname, 'node_modules/react-trello')
+    }
+  },
+  define: {
+    // asegura que process.env no explote
+    'process.env': {}
+  },
   server: {
     proxy: {
       // 1) Intercepta TODO lo que empiece por /api

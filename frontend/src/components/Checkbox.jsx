@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Checkbox = () => {
+export default function Checkbox( { id, label, checked, onChange } ) {
   return (
     <StyledWrapper>
       <label className="container">
-        <input type="checkbox" />
+        <input type="checkbox" id={id} checked={checked} onChange={onChange} />
         <div className="checkmark" />
       </label>
     </StyledWrapper>
@@ -91,5 +91,3 @@ const StyledWrapper = styled.div`
       box-shadow: 0 0 0 5px var(--IconLight);
       rotate: 0;
   }`;
-
-export default Checkbox;

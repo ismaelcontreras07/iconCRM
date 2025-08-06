@@ -6,12 +6,17 @@ header('Content-Type: application/json; charset=utf-8');
 try {
   $sql = "
     SELECT
-      a.*,
-      u.name AS assigned_name
-    FROM activities AS a
-    JOIN users AS u
-      ON u.id = a.assigned_to
-    ORDER BY a.due_date ASC, a.due_time ASC, a.created_at DESC
+  a.*,
+  u.name AS assigned_name,
+  CASE
+    WHEN a.activity_type='leads' THEN CONCAT(l.first_name,' ',l.last_name)
+    WHEN a.activity_type='contacto' THEN CONCAT(c.first_name,' ',c.last_name)
+    ELSE NULL
+  END AS reference_name
+FROM activities a
+JOIN users u ON u.id = a.assigned_to
+LEFT JOIN leads l     ON l.id = a.reference_id AND a.activity_type='leads'
+LEFT JOIN contacts c  ON c.id = a.reference_id AND a.activity_type='contacto';
   ";
   $stmt       = $pdo->query($sql);
   $activities = $stmt->fetchAll(PDO::FETCH_ASSOC);
