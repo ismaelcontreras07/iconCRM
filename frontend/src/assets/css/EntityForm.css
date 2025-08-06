@@ -14,19 +14,6 @@
     border-radius: 25px;
 }
 
-.entity-form::-webkit-scrollbar {
-    width: 7px;
-}
-
-.entity-form::-webkit-scrollbar-track {
-    background: var(--WhiteColor);
-}
-
-.entity-form::-webkit-scrollbar-thumb {
-    background: var(--IconDark);
-    border-radius: 6px;
-}
-
 .btn-close-form {
     position: absolute;
     top: 1rem;

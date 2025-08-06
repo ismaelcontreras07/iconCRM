@@ -38,8 +38,9 @@ export default function Leads() {
           />
         ) : null}
 
-
+        <div className="table-leads">
         <TableLeads />  
+        </div>
       </div>
     </main>
   );
