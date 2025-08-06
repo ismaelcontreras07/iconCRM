@@ -32,6 +32,7 @@ body {
 main {
   padding-top: 60px;
   padding-left: 60px;
+  padding-right: 0px;
 } 
 
 
@@ -93,6 +94,26 @@ main {
 }
 
 .btn:hover {
+  cursor: pointer;
+  background-color: var(--IconDark);
+  transition: all 0.2s ease;
+}
+
+.btn-delete {
+  width: 25%;
+  max-width: 150px;
+  min-width: 100px;
+  padding: 12px 8px;
+  margin-top: 2rem;
+  border-radius: 14px;
+  color: var(--WhiteColor);
+  font-family: inherit;
+  background-color: var(--IconRed);
+  border: none;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-delete:hover {
   cursor: pointer;
   background-color: var(--IconDark);
   transition: all 0.2s ease;
@@ -176,3 +197,50 @@ main {
 }
 
 
+.btn-toggle-details {
+  border: none;
+  background-color: transparent;
+  color: var(--WhiteColor);
+  cursor: pointer;
+  background-color: var(--IconColor);
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
+.btn-toggle-details:hover {
+  cursor: pointer;
+  background-color: var(--IconDark);
+  transition: all 0.2s ease;
+}
+
+.btn-actions {
+  border: none;
+  background-color: transparent;
+  color: var(--WhiteColor);
+  cursor: pointer;
+  background-color: var(--IconRed);
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  position: absolute;
+  right: 3rem;
+  top: 1rem;
+}
+
+.btn-actions:hover {
+  cursor: pointer;
+  background-color: var(--IconDark);
+  transition: all 0.2s ease;
+}

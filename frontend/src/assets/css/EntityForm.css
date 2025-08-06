@@ -12,6 +12,7 @@
     max-height: 80vh;
     overflow-y: auto;
     border-radius: 25px;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
 }
 
 .btn-close-form {

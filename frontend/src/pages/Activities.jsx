@@ -8,9 +8,19 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list'
 import interactionPlugin from '@fullcalendar/interaction'
+import '../assets/css/Calendar.css'
 
 import '../assets/css/Activities.css'
 
+  /**
+   * Pantalla principal de actividades.
+   *
+   * Renderiza un formulario para crear actividades, un tablero Kanban para
+   * visualizar las actividades y un calendario para mostrar las actividades con
+   * fecha límite.
+   *
+   * @returns {React.ReactElement} Elemento JSX de la pantalla de actividades.
+   */
 export default function Activities() {
   const navigate = useNavigate()
 
@@ -43,7 +53,7 @@ export default function Activities() {
   }))
 
   return (
-    <main className="activities-page" style={{ padding: '1.5rem' }}>
+    <main>
       <header>
         <div className="header-container">
           <h1 className="page-title">Actividades</h1>
@@ -66,14 +76,15 @@ export default function Activities() {
         />
       )}
 
-      <section className="kanban-wrapper" style={{ marginTop: '2rem' }}>
+      <section className="kanban-wrapper">
         <KanbanBoard
           key={refreshKey}
           onCardMove={() => handleCreate()}
         />
       </section>
 
-      <section className="calendar-wrapper" style={{ marginTop: '2rem' }}>
+      <section className="calendar-wrapper">
+        <div className="calendar-container">
         <FullCalendar
           plugins={[interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin]}
           initialView="dayGridMonth"
@@ -84,7 +95,10 @@ export default function Activities() {
           }}
           events={events}
           height="auto"
+          className="calendar"
+
         />
+        </div>
       </section>
     </main>
   )

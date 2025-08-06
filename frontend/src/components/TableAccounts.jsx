@@ -25,11 +25,14 @@ export default function TableAccounts() {
   const inputRef = useRef(null);
 
   function formatDDMMYYYY(rawDatetime) {
-    const [ymd] = rawDatetime.split(' ');
-    const [y, m, d] = ymd.split('-');
+    if (!rawDatetime) return '';
+    // toma solo la parte fecha, antes del espacio
+    const fecha = String(rawDatetime).split(' ')[0];
+    const [y, m, d] = fecha.split('-');
+    if (![y, m, d].every(x => x)) return '';
     return `${d}/${m}/${y}`;
   }
-
+  
   // Carga inicial de cuentas
   useEffect(() => {
     fetch('/api/accounts/listAccounts.php', { credentials: 'include' })

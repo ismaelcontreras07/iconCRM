@@ -78,6 +78,13 @@
     background-color: var(--IconLight);
 }
 
+.form-group-inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
 .error {
     color: var(--IconRed);
     font-size: 0.8rem;

@@ -1,0 +1,6 @@
+.sales-container {
+    display: flex;
+    justify-content: center;
+    background-color: var(--WhiteColor);
+    margin-top: 3rem;
+}

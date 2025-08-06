@@ -1,4 +1,11 @@
 
+* {
+    --KanbanRed: #ffcece;
+    --KanbanYellow: #fff5ce;
+    --KanbanGreen: #cefff5;
+    --KanbanBlue: #cee4ff;
+}
+
 
 .kanban-column {
     background: var(--WhiteColor);
@@ -12,15 +19,30 @@
     flex-direction: column;
     transition: background 0.2s ease;
   }
+
+  .kanban-column:first-child {
+    background-color: var(--KanbanRed);
+  }
+  .kanban-column:nth-child(2) {
+    background-color: var(--KanbanYellow);
+  }
+  .kanban-column:nth-child(3) {
+    background-color: var(--KanbanBlue);
+  }
+  .kanban-column:nth-child(4) {
+    background-color: var(--KanbanGreen);
+  }
+
   .kanban-column.drag-over {
     background: var(--IconGray); /* feedback al arrastrar sobre ella */
   }
   
   /* título de columna */
   .kanban-column .column-title {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     margin-bottom: 12px;
-    font-weight: 600;
+    font-weight: 800;
+    color: var(--IconDark);
   }
   
   /* tarjeta individual */

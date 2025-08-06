@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import '../assets/css/EntityForm.css';
+import '../assets/css/ActivitiesForm.css';
 import Checkbox from './Checkbox';
 
 export default function ActivitiesForm({ onCreate, onCancel }) {
@@ -112,7 +113,7 @@ const contactOptions = contactsOptions.map(c => ({
 
 
   return (
-      <form onSubmit={handleSubmit} className="entity-form">
+      <form onSubmit={handleSubmit} className="activities-form">
         {onCancel && (
           <button type="button" onClick={onCancel} className="btn-close-form">
             X
