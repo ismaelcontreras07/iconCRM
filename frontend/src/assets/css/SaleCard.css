@@ -9,6 +9,7 @@
     border-radius: 1rem;
     margin: 1rem;
     width: 1000px;
+    z-index: 0;
 }
 
 .sale-card-header {

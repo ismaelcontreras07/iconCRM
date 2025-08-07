@@ -184,6 +184,8 @@ const [clientRazonSelect, setClientRazonSelect] = useState('')
       }))
     };
   
+    console.log('customerInvoice payload:', payload.customerInvoice)
+
     try {
       const response = await fetch('/api/sales/createSale.php', {
         method: 'POST',

@@ -15,6 +15,22 @@ export default function SaleCard({ sale, onUpdated, onDeleted }) {
   const [reason, setReason]         = useState('')
   const [replacementInv, setReplacementInv] = useState('')
 
+  function formatDDMMYYYY(fecha) {
+    const d = new Date(fecha);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yy = d.getFullYear();
+    return `${dd}/${mm}/${yy}`;
+  }
+  
+  function formatDDMMYYYY(fechaISO) {
+    const [year, month, day] = fechaISO.split('-');
+    return `${day}/${month}/${year}`;
+  }
+  
+  const saleDate = formatDDMMYYYY(sale_date);
+  
+
     // update handlers
     const updateProviderStatus = async (provId, newStatus) => {
       const res = await fetch('/api/provider_invoices/updateStatus.php', {
@@ -89,9 +105,9 @@ export default function SaleCard({ sale, onUpdated, onDeleted }) {
     <div className="sale-card">
       <header className="sale-card-header">
         <div className="sale-header-main">
-          <h2 className="sale-title">Venta #{customerInvoice.invoice_number}</h2>
+          <h2 className="sale-title">Venta {customerInvoice.invoice_number}</h2>
           <p className="sale-date">
-            <small>{new Date(sale_date).toLocaleDateString()}</small>
+            <small>{saleDate}</small>
           </p>
         </div>
         <div className="sale-header-actions">

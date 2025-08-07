@@ -5,10 +5,9 @@ header('Content-Type: application/json; charset=utf-8');
 
 $payload = json_decode(file_get_contents('php://input'), true);
 
-// Empieza transacción
-$pdo->beginTransaction();
-
 try {
+  $pdo->beginTransaction();
+
   // 1) Crear factura de cliente
   $ci = $payload['customerInvoice'];
   $stmt1 = $pdo->prepare("
@@ -35,7 +34,7 @@ try {
     ':net_profit' => $ci['net_profit'],
     ':profit_pct' => $ci['profit_pct']
   ]);
-  $customerId = $pdo->lastInsertId();
+  $customerInvoiceId = $pdo->lastInsertId();
 
   // 2) Crear venta
   $sale = $payload['sale'];
@@ -46,50 +45,35 @@ try {
       (:cust_inv, :sale_date, :project, :description)
   ");
   $stmt2->execute([
-    ':cust_inv'   => $customerId,
-    ':sale_date'  => $sale['sale_date'],
-    ':project'    => $sale['project'],
-    ':description'=> $sale['description'] ?? null
+    ':cust_inv'    => $customerInvoiceId,
+    ':sale_date'   => $sale['sale_date'],
+    ':project'     => $sale['project'],
+    ':description' => $sale['description'] ?? null
   ]);
   $saleId = $pdo->lastInsertId();
 
   // 3) Crear facturas de proveedores
-// 3) Crear facturas de proveedores (con business_name convertido a string)
-$stmt3 = $pdo->prepare("
-  INSERT INTO provider_invoices
-    (sale_id, account_id, business_name, invoice_number,
-     issue_date, due_date, subtotal, total, status)
-  VALUES
-    (:sale_id, :acc_id, :bus_name, :inv_num,
-     :iss_date, :due_date, :subtotal, :total, :status)
-");
-foreach ($payload['providerInvoices'] as $inv) {
-  // si vienen varias razones sociales, las juntamos con coma
-  $busName = '';
-  if (!empty($inv['business_name'])) {
-    $busName = is_array($inv['business_name'])
-      ? implode(', ', $inv['business_name'])
-      : $inv['business_name'];
-  }
-
-  $stmt3->execute([
-    ':sale_id'   => $saleId,
-    ':acc_id'    => $inv['account_id'],
-    ':bus_name'  => $busName,
-    ':inv_num'   => $inv['invoice_number'],
-    ':iss_date'  => $inv['issue_date'],
-    ':due_date'  => $inv['due_date'],
-    ':subtotal'  => $inv['subtotal'],
-    ':total'     => round($inv['subtotal'] * 1.16, 2),
-    ':status'    => $inv['status']
-  ]);
-}
-
+  $stmt3 = $pdo->prepare("
+    INSERT INTO provider_invoices
+      (sale_id, account_id, business_name, invoice_number,
+       issue_date, due_date, subtotal, total, status)
+    VALUES
+      (:sale_id, :acc_id, :bus_name, :inv_num,
+       :iss_date, :due_date, :subtotal, :total, :status)
+  ");
   foreach ($payload['providerInvoices'] as $inv) {
+    // si vienen varias razones sociales, las juntamos con coma
+    $busName = '';
+    if (!empty($inv['business_name'])) {
+      $busName = is_array($inv['business_name'])
+        ? implode(', ', $inv['business_name'])
+        : $inv['business_name'];
+    }
+
     $stmt3->execute([
       ':sale_id'   => $saleId,
       ':acc_id'    => $inv['account_id'],
-      ':bus_name'  => $inv['business_name'],
+      ':bus_name'  => $busName,
       ':inv_num'   => $inv['invoice_number'],
       ':iss_date'  => $inv['issue_date'],
       ':due_date'  => $inv['due_date'],
@@ -108,15 +92,14 @@ foreach ($payload['providerInvoices'] as $inv) {
   ");
   foreach ($payload['commissions'] as $c) {
     $stmt4->execute([
-      ':sale_id'      => $saleId,
-      ':user_id'      => $c['user_id'],
-      ':pct'          => $c['pct'],
-      ':amount'       => $c['amount'],
-      ':invoice_id'   => $customerId
+      ':sale_id'    => $saleId,
+      ':user_id'    => $c['user_id'],
+      ':pct'        => $c['pct'],
+      ':amount'     => $c['amount'],
+      ':invoice_id' => $customerInvoiceId
     ]);
   }
 
-  // Confirmar transacción
   $pdo->commit();
 
   echo json_encode([

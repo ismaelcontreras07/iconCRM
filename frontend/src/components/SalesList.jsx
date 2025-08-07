@@ -16,8 +16,16 @@ export default function SalesList() {
       })
       .then(json => {
         if (!json.success) throw new Error(json.message || 'Error en respuesta')
-        // Aquí usamos json.data (no json.sales)
-        setSales(json.data)
+
+        // Orden descendente por número de factura (numérico)
+        const sorted = (json.data || []).sort((a, b) => {
+          const invA = a.customer_invoice.invoice_number
+          const invB = b.customer_invoice.invoice_number
+          // localeCompare con opción numeric:true para comparar "100">"20"
+          return invB.localeCompare(invA, undefined, { numeric: true })
+        })
+
+        setSales(sorted)
       })
       .catch(err => {
         console.error(err)
@@ -31,13 +39,13 @@ export default function SalesList() {
 
   return (
     <div className="sales-list-container">
-      {sales.length
-        ? sales.map(sale => (
-            // Nota que la clave es sale.sale_id
-            <SaleCard key={sale.sale_id} sale={sale} />
-          ))
-        : <p>No hay ventas registradas.</p>
-      }
+      {sales.length > 0 ? (
+        sales.map(sale => (
+          <SaleCard key={sale.sale_id} sale={sale} />
+        ))
+      ) : (
+        <p>No hay ventas registradas.</p>
+      )}
     </div>
   )
 }

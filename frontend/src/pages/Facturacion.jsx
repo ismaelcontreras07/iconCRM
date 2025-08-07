@@ -7,7 +7,8 @@ import '../assets/css/Facturacion.css'
 
 export default function Accounts() {
   const navigate = useNavigate();
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm]     = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   return (
     <main>
@@ -28,6 +29,7 @@ export default function Accounts() {
               {showForm ? (
                 <SalesForm
                   onCancel={() => setShowForm(false)}
+                  onCreate={() => {setShowForm(false); setRefreshKey(prev => prev + 1)}}
                   requiredFields={[ // Add required field names here, e.g., 'first_name', 'email'
                     // 'first_name',
                     // 'email',
@@ -36,7 +38,7 @@ export default function Accounts() {
                 />
               ) : null}  
           <div className="sales-container">
-          <SalesList />
+          <SalesList key={refreshKey} />
           </div>
     </main>
   );
