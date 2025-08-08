@@ -241,11 +241,6 @@ export default function SaleCard({ sale, onStatusChange, onDeleted }) {
               </label>
             </div>
           </div>
-          <button
-            className="exit-button"
-            onClick={() => setShowActions(false)}
-            aria-label="Cerrar"
-          >&times;</button>
         </div>
       )}
     </div>

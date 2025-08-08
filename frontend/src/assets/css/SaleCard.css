@@ -10,7 +10,7 @@
     margin: 1rem;
     width: 1000px;
     height: auto;
-    z-index: 0;
+    z-index: 1;
 }
 
 .sale-card-header {
@@ -54,7 +54,8 @@
 
 .sale-card-body {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
     width: 100%;
     max-height: 0;
     opacity: 0;
@@ -92,6 +93,7 @@
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--IconColor);
+    text-align: center;
   }
 
   .client-section {
@@ -108,6 +110,7 @@
     font-size: 0.8rem;
     background-color: #fff;
     border-radius: 14px;
+    min-width: 350px;
   }
 
   .provider-invoice-item,
@@ -120,14 +123,12 @@
 
   /* Acción-card */
 .action-card {
-    position: absolute;
     top: 1rem; right: 1rem;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    background: var(--WhiteColor);
+    margin: 1rem;
+    border-radius: 14px;
     width: 300px;
     z-index: 10;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     padding: 1rem;
   }
   
@@ -156,4 +157,3 @@
     border: 1px solid #ccc;
     border-radius: 4px;
   }
-  

@@ -1,19 +1,60 @@
 // src/pages/Catalog.jsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import ProductForm from '../components/ProductForm';
+import ProductCard from '../components/ProductCard';
 
 export default function Catalog() {
-  const navigate = useNavigate();
+  const [showForm, setShowForm]     = useState(false);
+  const [products, setProducts]     = useState([]);
+  const [loading, setLoading]       = useState(true);
+
+  useEffect(() => {
+    fetch('/api/products', { credentials: 'include' })
+      .then(r => r.json())
+      .then(json => {
+        if (json.success) {
+          setProducts(json.products);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleCreate = (newProduct) => {
+    setProducts([ newProduct, ...products ]);
+    setShowForm(false);
+  };
+
+  if (loading) return <p>Cargando catálogo…</p>;
 
   return (
     <main>
-      <div className="catalog-page" style={{ padding: '1.5rem' }}>
       <header>
         <div className="header-container">
-        <h1 className='page-title'>Catálogo</h1>
+          <h1 className="page-title">Catálogo de Productos</h1>
         </div>
       </header>
-    </div>
+
+      <div className="btn-container">
+        <button
+          onClick={() => setShowForm(prev => !prev)}
+          className="btn"
+        >
+          + Nuevo Producto
+        </button>
+      </div>
+
+      {showForm && (
+        <ProductForm
+          onCreate={handleCreate}
+          onCancel={() => setShowForm(false)}
+        />
+      )}
+
+      <div className="cards-container">
+        {products.map(prod => (
+          <ProductCard key={prod.id} product={prod} />
+        ))}
+      </div>
     </main>
   );
 }

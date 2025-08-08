@@ -10,7 +10,6 @@ export default function Contacts() {
 
   return (
     <main>
-      <div className="contacts-page" style={{ padding: '1.5rem' }}>
       <header>
         <div className="header-container">
         <h1 className='page-title'>Contactos</h1>
@@ -41,7 +40,6 @@ export default function Contacts() {
               <div className="table-contacts">
                 <TableContacts />
               </div>
-    </div>
     </main>
   );
 }

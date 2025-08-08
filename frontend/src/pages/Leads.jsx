@@ -10,7 +10,6 @@ export default function Leads() {
 
   return (
     <main>
-      <div className="leads-page" style={{ padding: '1.5rem' }}>
         <header>
           <div className="header-container">
             <h1 className='page-title'>Leads</h1>
@@ -41,7 +40,6 @@ export default function Leads() {
         <div className="table-leads">
         <TableLeads />  
         </div>
-      </div>
     </main>
   );
 }

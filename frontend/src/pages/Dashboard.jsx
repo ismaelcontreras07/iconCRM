@@ -1,19 +1,21 @@
-// src/pages/Dashboard.jsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { AuthContext }             from '../context/AuthContext';
+import CommissionsCard             from '../components/CommissionsCard';
 
 export default function Dashboard() {
-  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   return (
-    <main>
-      <div className="dashboard-page" style={{ padding: '1.5rem' }}>
-      <header>
-        <div className="header-container">
-        <h1 className='page-title'>Dashboard</h1>
-        </div>
+    <main className="dashboard-page">
+      <header className="header-container">
+        <h1 className="page-title">Dashboard</h1>
+        <p className="welcome">¡Hola, {user.name}!</p>
       </header>
-    </div>
+
+      <section className="dashboard-content">
+        <CommissionsCard />
+        {/* aquí luego podrías añadir más cards */}
+      </section>
     </main>
   );
 }

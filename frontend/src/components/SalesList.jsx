@@ -1,45 +1,79 @@
+// src/components/SalesList.jsx
 import React, { useState, useEffect, useCallback } from 'react'
-import SaleCard from './SaleCard'
+import SaleCard       from './SaleCard'
+import ComplementCard from './ComplementCard'
 import '../assets/css/SalesList.css'
 
 export default function SalesList({ onStatusChange }) {
-  const [sales, setSales]     = useState([])
+  const [items, setItems]     = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState('')
+  const [refreshKey, setRefreshKey] = useState(0)
 
-  // Carga inicial
   useEffect(() => {
+    setLoading(true);
     fetch('/api/sales/listSales.php', { credentials: 'include' })
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.json()
-      })
+      .then(res => res.json())
       .then(json => {
-        if (!json.success) throw new Error(json.message || 'Error en respuesta')
-        setSales(json.data)
+        if (!json.success) throw new Error(json.message || 'Error en listado');
+  
+        const combined = [
+          ...json.sales.map(s => ({
+            type: 'sale',
+            data: s,
+            // para conveniencia podríamos guardar también el número:
+            num: parseInt(s.customer_invoice.invoice_number.replace(/\D/g, ''), 10)
+          })),
+          ...json.complements.map(c => ({
+            type: 'complement',
+            data: c,
+            num: parseInt(c.invoice_number.replace(/\D/g, ''), 10)
+          }))
+        ];
+  
+        // Orden descendente por num (el mayor arriba)
+        combined.sort((a, b) => b.num - a.num);
+  
+        setItems(combined);
       })
       .catch(err => {
-        console.error(err)
-        setError('No se pudieron cargar las ventas')
+        console.error(err);
+        setError('No se pudieron cargar los registros');
       })
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [refreshKey]);
+  
+
+  const handleDeleted = useCallback(() => {
+    setRefreshKey(k => k + 1)
   }, [])
 
-  if (loading) return <p>Cargando ventas…</p>
+  if (loading) return <p>Cargando registros…</p>
   if (error)   return <p className="error">{error}</p>
 
   return (
     <div className="sales-list-container">
-      {sales.length
-        ? sales.map(sale => (
-<SaleCard
-  key={sale.sale_id}
-  sale={sale}
-  onStatusChange={onStatusChange}
-  onDeleted={() => setRefreshKey(k => k + 1)}
-/>
-          ))
-        : <p>No hay ventas registradas.</p>
+      {items.length > 0
+        ? items.map(item =>
+            item.type === 'sale'
+              ? (
+                <SaleCard
+                  key={`sale-${item.data.sale_id}`}
+                  sale={item.data}
+                  onStatusChange={onStatusChange}
+                  onDeleted={handleDeleted}
+                />
+              ) : (
+                <ComplementCard
+                  key={`comp-${item.data.id}`}
+                  complement={item.data}
+                  onDeleted={handleDeleted}
+                />
+              )
+          )
+        : <p>No hay registros.</p>
       }
     </div>
   )

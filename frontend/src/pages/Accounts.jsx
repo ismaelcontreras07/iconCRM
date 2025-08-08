@@ -10,7 +10,6 @@ export default function Accounts() {
 
   return (
     <main>
-      <div className="accounts-page" style={{ padding: '1.5rem' }}>
       <header>
         <div className="header-container">
         <h1 className='page-title'>Cuentas</h1>
@@ -39,7 +38,6 @@ export default function Accounts() {
             <div className="table-accounts">
               <TableAccounts />
             </div>
-    </div>
     </main>
   );
 }

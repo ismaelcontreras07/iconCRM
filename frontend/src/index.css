@@ -74,9 +74,12 @@ main {
   border-radius: 14px;
 }
 
+
+
 .btn-container {
   display: flex;
   justify-content: center;
+  gap: 1rem;
 }
 
 .btn {

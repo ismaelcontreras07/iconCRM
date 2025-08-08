@@ -16,8 +16,11 @@ import Contacts        from './pages/Contacts';
 import Facturacion     from './pages/Facturacion';
 import Activities     from './pages/Activities';
 import Accounts           from './pages/Accounts';
+import DetalleFacturacion from './pages/DetalleFacturacion';
 import Catalog           from './pages/Catalog';
 import './index.css';
+
+
 
 // Mapa de rutas a título de la página
 const routeTitles = {
@@ -26,6 +29,7 @@ const routeTitles = {
   '/leads':     'Leads',
   '/contacts':  'Contactos',
   '/facturacion': 'Facturación',
+  '/facturacion/detalle': 'Detalle de Facturación',
   '/activities': 'Actividades',
   '/accounts': 'Cuentas',
   '/catalog': 'Catalogo',
@@ -80,6 +84,7 @@ export default function App() {
           <Route path="activities"     element={<Activities />} />
           <Route path="accounts"     element={<Accounts />} />
           <Route path="catalog"     element={<Catalog />} />
+          <Route path="facturacion/detalle"     element={<DetalleFacturacion />} />
         </Route>
 
         {/* Catch-all: redirige según auth */}

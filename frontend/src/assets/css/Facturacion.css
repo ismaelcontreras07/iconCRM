@@ -3,15 +3,18 @@
     justify-content: center;
     background-color: #fff;
     margin-top: 3rem;
-    height: 500px;
+    height: 800px;
     overflow-y: auto;
 }
 
 .sales-content {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
-    max-height: 500px;
+    max-height: 800px;
+    width: 80%;
+    height: auto;
     overflow-y: auto;
     background-color: var(--WhiteColor);
     padding: 1rem;
