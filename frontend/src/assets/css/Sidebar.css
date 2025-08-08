@@ -86,7 +86,7 @@
   width: 200px;
   height: 100%;
   transition: all 0.2s ease;
-  z-index: 1;
+  z-index: 2;
 }
 
 .wrapper .sidebar ul li a{

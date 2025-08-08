@@ -10,7 +10,7 @@ export default function Catalog() {
       <div className="catalog-page" style={{ padding: '1.5rem' }}>
       <header>
         <div className="header-container">
-        <h1 className='page-title'>Catalogo</h1>
+        <h1 className='page-title'>Catálogo</h1>
         </div>
       </header>
     </div>

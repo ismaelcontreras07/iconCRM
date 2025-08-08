@@ -129,9 +129,9 @@ export default function KanbanBoard({ onCardMove }) {
                               ? leadMap[card.reference_id]
                               : contactMap[card.reference_id] || '—'
                             }
-                            <p><strong>Fecha:</strong> {card.due_date}</p>
-                            <p><strong>Estado:</strong> {card.status}</p>
-                            <p><strong>Descripción:</strong> {card.description}</p>
+                            <p className="kanban-card-date"><strong>Fecha:</strong> {card.due_date}</p>
+                            <p className="kanban-card-status"><strong>Estado:</strong> {card.status}</p>
+                            <p className="kanban-card-description"><strong>Descripción:</strong> {card.description}</p>
                           </div>
                         )}
                       </div>

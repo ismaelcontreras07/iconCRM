@@ -4,6 +4,7 @@
     --KanbanYellow: #fff5ce;
     --KanbanGreen: #cefff5;
     --KanbanBlue: #cee4ff;
+    --KanbanPurple: #e4ceff;
 }
 
 
@@ -24,7 +25,7 @@
     background-color: var(--KanbanRed);
   }
   .kanban-column:nth-child(2) {
-    background-color: var(--KanbanYellow);
+    background-color: var(--KanbanPurple);
   }
   .kanban-column:nth-child(3) {
     background-color: var(--KanbanBlue);
