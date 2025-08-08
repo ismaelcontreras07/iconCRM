@@ -56,12 +56,12 @@ export default function Sidebar() {
                 <span className="title">Leads</span>
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink to="/nature" className="sidebar-link">
                 <span className="icon"><i className="fas fa-user-slash" /></span>
                 <span className="title">Eliminados</span>
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink to="/contacts" className="sidebar-link">
                 <span className="icon"><i className="fas fa-briefcase" /></span>

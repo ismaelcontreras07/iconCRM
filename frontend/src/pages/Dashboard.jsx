@@ -1,16 +1,20 @@
 import React, { useContext } from 'react';
 import { AuthContext }             from '../context/AuthContext';
 import CommissionsCard             from '../components/CommissionsCard';
+import '../assets/css/Dashboard.css'; 
 
 export default function Dashboard() {
   const { user } = useContext(AuthContext);
 
   return (
-    <main className="dashboard-page">
+    <main>
       <header className="header-container">
         <h1 className="page-title">Dashboard</h1>
-        <p className="welcome">¡Hola, {user.name}!</p>
       </header>
+
+      <div className="welcome-container">
+        <p className="welcome">¡Hola, {user.name}!</p>
+      </div>
 
       <section className="dashboard-content">
         <CommissionsCard />

@@ -52,7 +52,7 @@ export default function CommissionsCard() {
       {coms.length === 0 ? (
         <p>No tienes comisiones pendientes.</p>
       ) : (
-        <table className="comm-table">
+        <table className="entity-table">
           <thead>
             <tr>
               <th>Factura</th>
@@ -65,8 +65,8 @@ export default function CommissionsCard() {
             {coms.map(c => (
               <tr key={c.id}>
                 <td>{c.invoice_number}</td>
-                <td>{c.pct.toFixed(2)}%</td>
-                <td>${c.amount.toFixed(2)}</td>
+                <td>{Number(c.pct).toFixed(2)}%</td>
+                <td>${Number(c.amount).toFixed(2)}</td>
                 <td>
                   <select
                     value={c.status}
