@@ -1,13 +1,13 @@
-// src/components/SalesList.jsx
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import SaleCard from './SaleCard'
 import '../assets/css/SalesList.css'
 
-export default function SalesList() {
+export default function SalesList({ onStatusChange }) {
   const [sales, setSales]     = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState('')
 
+  // Carga inicial
   useEffect(() => {
     fetch('/api/sales/listSales.php', { credentials: 'include' })
       .then(res => {
@@ -16,16 +16,7 @@ export default function SalesList() {
       })
       .then(json => {
         if (!json.success) throw new Error(json.message || 'Error en respuesta')
-
-        // Orden descendente por número de factura (numérico)
-        const sorted = (json.data || []).sort((a, b) => {
-          const invA = a.customer_invoice.invoice_number
-          const invB = b.customer_invoice.invoice_number
-          // localeCompare con opción numeric:true para comparar "100">"20"
-          return invB.localeCompare(invA, undefined, { numeric: true })
-        })
-
-        setSales(sorted)
+        setSales(json.data)
       })
       .catch(err => {
         console.error(err)
@@ -39,13 +30,17 @@ export default function SalesList() {
 
   return (
     <div className="sales-list-container">
-      {sales.length > 0 ? (
-        sales.map(sale => (
-          <SaleCard key={sale.sale_id} sale={sale} />
-        ))
-      ) : (
-        <p>No hay ventas registradas.</p>
-      )}
+      {sales.length
+        ? sales.map(sale => (
+<SaleCard
+  key={sale.sale_id}
+  sale={sale}
+  onStatusChange={onStatusChange}
+  onDeleted={() => setRefreshKey(k => k + 1)}
+/>
+          ))
+        : <p>No hay ventas registradas.</p>
+      }
     </div>
   )
 }
